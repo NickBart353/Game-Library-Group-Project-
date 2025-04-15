@@ -1,0 +1,44 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "type": "java",
+                "name": "Main",
+                "request": "launch",
+                "mainClass": "Main",
+                "projectName": "Speicherplatzrechner_V3_e8b5e0fe"
+            },
+            {
+                "type": "java",
+                "name": "MainWindow",
+                "request": "launch",
+                "mainClass": "MainWindow",
+                "projectName": "Speicherplatzrechner_V1.2_5460e8a8"
+            },
+            {
+                "type": "java",
+                "name": "MainWindow",
+                "request": "launch",
+                "mainClass": "MainWindow",
+                "projectName": "Speicherplatzrechner_V1.1_5460e8a7"
+            },
+            {
+                "type": "java",
+                "name": "MainWindow",
+                "request": "launch",
+                "mainClass": "MainWindow",
+                "projectName": "Speicherplatzrechner_V1_54444be4"
+            },
+            {
+                "type": "java",
+                "name": "MainWindow Debug",
+                "request": "launch",
+                "mainClass": "MainWindow",
+                "projectName": "Speicherplatzrechner_V1_e8b5e0fc",
+                "stopOnEntry": true
+            }
+        ]
+    }
