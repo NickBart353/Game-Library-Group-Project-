@@ -8,13 +8,16 @@ import javax.swing.SortOrder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-public class EventHandler {      
+public class EventHandler {
+
     //Array für die Daten der Spiele und Users
     public static String UserID = "-1";
     public static ArrayList<String[]> games;
     public static ArrayList<String[]> users;
+    public static ArrayList<Game> spiele;
+    public static ArrayList<User> benutzer;
 
-    //Instanzen für GameManager und 
+    //Instanzen für GameManager und
     GameManager gamemanager;
     public static LoginHandler login;
 
@@ -22,16 +25,33 @@ public class EventHandler {
     public EventHandler() {
 
         //Hole dir die Daten für Games/ Users
-        games = DataHandler.getDataFromTemp("Games.csv");
-        users = DataHandler.getDataFromTemp("Users.csv");
-    
+        games = (ArrayList<String[]>) (DataHandler.getDataFromTemp("Games.csv"));
+        users = (ArrayList<String[]>) (DataHandler.getDataFromTemp("Users.csv"));
+
+        //spiele = DataHandler.getGamesFromTemp("Games.csv");
+        //benutzer = DataHandler.getUsersFromTemp("Users.csv");
+
+        if(!users.isEmpty()){
+            for(String[] list : users){
+                benutzer.add(new User(list[1], list[2], Integer.parseInt(list[0])));
+            }
+        }
+        if(!games.isEmpty()){
+            for(String[] list : games){
+                for (int i = 0; i < benutzer.size(); i++) {
+                    if(benutzer.get(i).getId()==Integer.parseInt(list[5])){
+                        spiele.add(new Game(list[1], list[2], list[3], list[4], /*benutzer.get(i)*/ Integer.toString(i),list[0]));
+                        break;
+                    }
+                }
+            }
+        }
+
         //Instanzen für GameManager und GameFilter initialisieren
         gamemanager = new GameManager();
-
         //Instanz für das LoginFenster initialisieren
-        login = new LoginHandler(users);
+        login = new LoginHandler(users, benutzer);
     }
-
     //Methode überprüft ob die eingegebenen Werte für das registrieren eines Users stimmen, wenn ja dann Anlegen. Ansonsten Fehlermeldung
     public static void RegisterUser() {
         String username = RegisterWindow.benutzerNamTextField.getText();
@@ -280,6 +300,15 @@ public class EventHandler {
                     MainWindow.eintragHinzufuegen(spiel[0], spiel[1], Kategorie, spiel[3]);
                 }
             }
+            for (Game spiel : spiele) {
+                if (spiel.getKategorie().equals(Kategorie) &&   //Gehört es zu dieser kategorie?
+                        spiel.getId().equals(UserID)         //Und zu diesem User?
+                ) {
+                    //Ja, dann füg es zur Tabelle hinzu
+                    MainWindow.eintragHinzufuegen(spiel.getId(), spiel.getName(), Kategorie, spiel.getGroesse());
+                }
+            }
+
         }
 
         //Möchte er nach irgendwas sortieren?

@@ -24,6 +24,14 @@ public class GameManager {
         }
     }
 
+    //schaut ob genau 1 , im string temp ist und ersetzt ihn mit .
+    private static String replaceComma(String temp){
+        if (temp != null && temp.chars().filter(ch -> ch == ',').count() == 1){
+            temp = temp.replace(",", ".");
+        }
+        return temp;
+    }
+
     //Methode wird aufgerufen um zu überprüfen ob die Werte beim hinzufügen oder ändern korrekt sind
     public boolean AreValuesRight() {
         String titel = MainWindow.titelTextbox.getText();
@@ -36,9 +44,9 @@ public class GameManager {
             //Wenn er da nichts nehmen kann, dann hat er quasi keine kategorie eingegeben
             kategorieString = "";
         }
-     
+
         try {
-            Double.parseDouble(MainWindow.speicherPlatzTextBox.getText());
+            Double.parseDouble(replaceComma(MainWindow.speicherPlatzTextBox.getText()));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Der Speicherplatz muss eine Zahl sein");
             return false;
@@ -167,7 +175,9 @@ public class GameManager {
     //Methode fügt das Spiel zum Array und zur Tabelle hinzu. ggf. auch die kategorie in die ComboBox
     public void AddGame() {
         //Eintrag zum Array hizufügen
-        EventHandler.games.add(new String[] {GetNewID(EventHandler.games), MainWindow.titelTextbox.getText(), MainWindow.kategoriebox.getSelectedItem().toString(), MainWindow.speicherPlatzTextBox.getText(), MainWindow.pfadTextBox.getText(), EventHandler.UserID});
+
+        EventHandler.games.add(new String[] {GetNewID(EventHandler.games), MainWindow.titelTextbox.getText(), MainWindow.kategoriebox.getSelectedItem().toString(), MainWindow.speicherPlatzTextBox.getText().replace(",","."), MainWindow.pfadTextBox.getText(), EventHandler.UserID});
+        EventHandler.spiele.add(new Game(MainWindow.titelTextbox.getText(), MainWindow.speicherPlatzTextBox.getText().replace(",","."), MainWindow.kategoriebox.getSelectedItem().toString(), MainWindow.pfadTextBox.getText(), EventHandler.UserID, "-1"));// GetNewID(EventHandler.games),  ,  , ));
         
         //Wenn die Kategorie noch nicht in der Combo ist, füg sie hinzu
         if (((DefaultComboBoxModel<String>) MainWindow.kategoriebox.getModel()).getIndexOf(MainWindow.kategoriebox.getSelectedItem().toString()) == -1) {
@@ -193,7 +203,7 @@ public class GameManager {
         }
     }
 
-    //Methode ändert die Werte für ein AUsgewähltes Spiel
+    //Methode ändert die Werte für ein ausgewähltes Spiel
     public void ChangeGame() {
         //Bestimme die ID des ausgewählten Indexes in der Tabelle
         String ID = GetIDFromTable();
@@ -208,6 +218,17 @@ public class GameManager {
                 spiel[3] = MainWindow.speicherPlatzTextBox.getText();
                 spiel[4] = MainWindow.pfadTextBox.getText();
                 spiel[5] = EventHandler.UserID;
+            }
+        }
+        for (Game spiel : EventHandler.spiele) {
+            //Hat der DS die ID
+            if (spiel.getId() == ID) {
+                //Ersetze die Werte im DS durch die neuen
+                spiel.setName(MainWindow.titelTextbox.getText());
+                spiel.setKategorie(MainWindow.kategoriebox.getSelectedItem().toString());
+                spiel.setGroesse(MainWindow.speicherPlatzTextBox.getText());
+                spiel.setExePath(MainWindow.pfadTextBox.getText());
+                spiel.setUser(EventHandler.UserID);
             }
         }
         

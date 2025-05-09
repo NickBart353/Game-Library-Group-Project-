@@ -11,11 +11,18 @@ public class DataHandler {
     public static String tempDir = System.getProperty("java.io.tmpdir");
 
     //Methode um sich die Daten für Games und User aus dem Temp-Ordner in eine ArrayList innerhalb des Programms zu kopieren
-    public static ArrayList<String[]> getDataFromTemp(String Dateiname) 
+    public static ArrayList<String[]> getDataFromTemp(String Dateiname)
     {
         try {
             //Array in dem die Spiele gespeichert werden
             ArrayList<String[]> data = new ArrayList<>();
+            ArrayList<Game> gameData = new ArrayList<>();
+            ArrayList<User> userData = new ArrayList<>();
+            String name;
+            String kategorie;
+            String pathOrd;
+            String pathExe;
+            double groesse;
 
             //Bestimme den Pfad zum Temp Ordner, und zur Daten.csv Datei
             File file = new File(tempDir, "Speicherplatzrechner\\" + Dateiname);
@@ -52,7 +59,8 @@ public class DataHandler {
                         //Müssen mindestens 5 Teile sein, sonst Indexfehler bei leerer Zeile
                         if (lineparts.length >= 5) {
                             // Füge für jede Zeile einen Eintrag in die ArrayList hinzu
-                            data.add(new String[] {lineparts[0], lineparts[1], lineparts[2], lineparts[3], lineparts[4], lineparts[5]});
+                            //data.add(new String[] {lineparts[0], lineparts[1], lineparts[2], lineparts[3], lineparts[4], lineparts[5]});
+                            gameData.add(new Game(lineparts[1], Double.parseDouble(lineparts[2]), lineparts[3], lineparts[4], lineparts[5]));
                         }
                     } 
                     //Dann will er Users hinzufügen
@@ -60,7 +68,8 @@ public class DataHandler {
                         //Müssen mindestens 3 Teile sein, sonst Indexfehler bei leerer Zeile
                         if (lineparts.length >= 3) {
                             // Füge auch für jede Zeile einen Eintrag hinzu, nur weniger Spalten
-                            data.add(new String[] {lineparts[0], lineparts[1], lineparts[2]});
+                            //data.add(new String[] {lineparts[0], lineparts[1], lineparts[2]});
+                            userData.add(new User(lineparts[1], lineparts[2], Integer.parseInt(lineparts[0])));
                         }
                     }
                 }

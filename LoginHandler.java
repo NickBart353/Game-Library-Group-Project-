@@ -2,10 +2,12 @@ import java.util.ArrayList;
 
 public class LoginHandler {
     private ArrayList<String[]> users;
+    private ArrayList<User> benutzer;
 
     //Konstruktor für die Klasse LoginHandler
-    public LoginHandler(ArrayList<String[]> _users) {
+    public LoginHandler(ArrayList<String[]> _users, ArrayList<User> _benutzer) {
         users = _users;
+        benutzer = _benutzer;
     }
 
     //Methode zum überprüfen ob der User registriert ist
@@ -15,6 +17,12 @@ public class LoginHandler {
             //Hat ein Benutzer den Benutzernamen?
             if (benutzer[1].equals(username)) {
                 //Ja? Dann darf er
+                return true;
+            }
+        }
+
+        for (User user : benutzer){
+            if(user.getName().equals(username)){
                 return true;
             }
         }
