@@ -16,13 +16,8 @@ public class DataHandler {
         try {
             //Array in dem die Spiele gespeichert werden
             ArrayList<String[]> data = new ArrayList<>();
-            ArrayList<Game> gameData = new ArrayList<>();
-            ArrayList<User> userData = new ArrayList<>();
-            String name;
-            String kategorie;
-            String pathOrd;
-            String pathExe;
-            double groesse;
+            //ArrayList<Game> gameData = new ArrayList<>();
+            //ArrayList<User> userData = new ArrayList<>();
 
             //Bestimme den Pfad zum Temp Ordner, und zur Daten.csv Datei
             File file = new File(tempDir, "Speicherplatzrechner\\" + Dateiname);
@@ -59,8 +54,8 @@ public class DataHandler {
                         //Müssen mindestens 5 Teile sein, sonst Indexfehler bei leerer Zeile
                         if (lineparts.length >= 5) {
                             // Füge für jede Zeile einen Eintrag in die ArrayList hinzu
-                            //data.add(new String[] {lineparts[0], lineparts[1], lineparts[2], lineparts[3], lineparts[4], lineparts[5]});
-                            gameData.add(new Game(lineparts[1], lineparts[2], lineparts[3], lineparts[4], lineparts[5],"-1"));
+                            data.add(new String[] {lineparts[0], lineparts[1], lineparts[2], lineparts[3], lineparts[4], lineparts[5]});
+                            //gameData.add(new Game(lineparts[1], lineparts[2], lineparts[3], lineparts[4], lineparts[5],"-1"));
                         }
                     } 
                     //Dann will er Users hinzufügen
@@ -68,8 +63,8 @@ public class DataHandler {
                         //Müssen mindestens 3 Teile sein, sonst Indexfehler bei leerer Zeile
                         if (lineparts.length >= 3) {
                             // Füge auch für jede Zeile einen Eintrag hinzu, nur weniger Spalten
-                            //data.add(new String[] {lineparts[0], lineparts[1], lineparts[2]});
-                            userData.add(new User(lineparts[1], lineparts[2], Integer.parseInt(lineparts[0])));
+                            data.add(new String[] {lineparts[0], lineparts[1], lineparts[2]});
+                            //userData.add(new User(lineparts[1], lineparts[2], Integer.parseInt(lineparts[0])));
                         }
                     }
                 }

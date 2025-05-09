@@ -25,11 +25,14 @@ public class EventHandler {
     public EventHandler() {
 
         //Hole dir die Daten für Games/ Users
-        games = (ArrayList<String[]>) (DataHandler.getDataFromTemp("Games.csv"));
-        users = (ArrayList<String[]>) (DataHandler.getDataFromTemp("Users.csv"));
+        games = DataHandler.getDataFromTemp("Games.csv");
+        users = DataHandler.getDataFromTemp("Users.csv");
 
         //spiele = DataHandler.getGamesFromTemp("Games.csv");
         //benutzer = DataHandler.getUsersFromTemp("Users.csv");
+
+        spiele = new ArrayList<>();
+        benutzer = new ArrayList<>();
 
         if(!users.isEmpty()){
             for(String[] list : users){
@@ -105,6 +108,7 @@ public class EventHandler {
         }
 
         //Existiert der User?
+        System.out.println("TEST");
         if (login.IsUserRegistered(username)) {
             //Ist das Passwort richtig?
             if (login.IsPasswordCorrect(username, passwort)) {

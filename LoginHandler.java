@@ -21,11 +21,13 @@ public class LoginHandler {
             }
         }
 
-        for (User user : benutzer){
-            if(user.getName().equals(username)){
-                return true;
+       // if(benutzer != null){
+            for (User user : benutzer){
+                if(user.getName().equals(username)){
+                    return true;
+                }
             }
-        }
+       // }
 
         //Es gibt diesen User nicht
         return false;
