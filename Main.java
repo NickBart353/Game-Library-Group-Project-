@@ -14,7 +14,7 @@ public class Main {
     private static EventHandler logik;
     
     // Merken, ob Darkmode an/aus ist
-    public static boolean isDarkmode = false;
+    public static boolean isDarkmode = true;
 
     public static void main(String[] args) {
         // Initialisiere Instanz
@@ -236,17 +236,17 @@ public class Main {
     }
     
     // Methode fügt mehrere Test-Datensätze in das Array der Spiele
-    public static ArrayList<String[]> PrintTestDaten() {
+    public static ArrayList<Game> PrintTestDaten() {
         // Erstelle ein ArrayList mit den Testdaten
-        ArrayList<String[]> games = new ArrayList<String[]>() {{
-            add(new String[] {"1", "Call of Duty", "Shooter", "60", "", "1"});
-            add(new String[] {"2", "League of Legends", "Strategie", "40", "", "1"});
-            add(new String[] {"3", "Clash of Clans", "Strategie", "3", "", "1"});
-            add(new String[] {"5", "Phasmophobia", "Horror", "8", "", "1"});
-            add(new String[] {"6", "Euro Truck Simulator 4", "Simulation", "10", "", "1"});
+        ArrayList<Game> games = new ArrayList<>() {{
+            add(new Game ("Call of Duty", "Shooter", "60", "","0","0" ));
+            add(new Game ("League of Legends", "Strategie", "40", "","0", "1" ));
+            add(new Game ("Clash of Clans", "Strategie", "3", "", "0", "2"));
+            add(new Game ("Phasmophobia", "Horror", "8", "", "0", "3"));
+            add(new Game ("Euro Truck Simulator 4", "Simulation", "10", "", "0", "4"));
             // Auch für Sysadmin schon welche
-            add(new String[] {"7", "Call of Duty_sysadmin", "Strategie", "10", "", "2"});
-            add(new String[] {"8", "Minecraft_sysadmin", "Simulation", "20", "", "2"});
+            add(new Game ("Call of Duty_sysadmin", "Strategie", "10", "", "1", "1"));
+            add(new Game ("Minecraft_sysadmin", "Simulation", "20", "", "1", "2"));
         }};
         return games;
     }
@@ -256,18 +256,17 @@ public class Main {
         // Alle Einträge aus Tabelle löschen
         MainWindow.model.setRowCount(0);
 
-        // Gehe jedes hinzugefügte Spiel durch
-        for (String[] spiel : EventHandler.games) {
+        for (Game game : EventHandler.games) {
             // Gehört das Spiel zum angemeldeten User?
-            if (spiel[5].equals(EventHandler.UserID)) {
+            if (game.getId().equals(EventHandler.UserID)) {
                 // Füge das Spiel zur Tabelle hinzu
-                MainWindow.eintragHinzufuegen(spiel[0], spiel[1], spiel[2], spiel[3]);
+                MainWindow.eintragHinzufuegen(game.getId(), game.getName(), game.getKategorie(), game.getGroesse());
 
                 // Hat die Kategorie einen Namen, der noch nicht in den Comboboxen ist?
-                if (((DefaultComboBoxModel<String>) MainWindow.kategoriebox.getModel()).getIndexOf(spiel[2]) == -1) {
+                if (((DefaultComboBoxModel<String>) MainWindow.kategoriebox.getModel()).getIndexOf(game.getKategorie()) == -1) {
                     // Füge die gerade aktuelle Kategorie in die Comboboxen ein
-                    MainWindow.kategoriebox.addItem(spiel[2]);
-                    MainWindow.kategorieFilterBox.addItem(spiel[2]);
+                    MainWindow.kategoriebox.addItem(game.getKategorie());
+                    MainWindow.kategorieFilterBox.addItem(game.getKategorie());
                 }
             }
         }

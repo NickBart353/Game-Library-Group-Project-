@@ -12,10 +12,8 @@ public class EventHandler {
 
     //Array für die Daten der Spiele und Users
     public static String UserID = "-1";
-    public static ArrayList<String[]> games;
-    public static ArrayList<String[]> users;
-    public static ArrayList<Game> spiele;
-    public static ArrayList<User> benutzer;
+    public static ArrayList<Game> games;
+    public static ArrayList<User> users;
 
     //Instanzen für GameManager und
     GameManager gamemanager;
@@ -25,35 +23,14 @@ public class EventHandler {
     public EventHandler() {
 
         //Hole dir die Daten für Games/ Users
-        games = DataHandler.getDataFromTemp("Games.csv");
-        users = DataHandler.getDataFromTemp("Users.csv");
 
-        //spiele = DataHandler.getGamesFromTemp("Games.csv");
-        //benutzer = DataHandler.getUsersFromTemp("Users.csv");
-
-        spiele = new ArrayList<>();
-        benutzer = new ArrayList<>();
-
-        if(!users.isEmpty()){
-            for(String[] list : users){
-                benutzer.add(new User(list[1], list[2], Integer.parseInt(list[0])));
-            }
-        }
-        if(!games.isEmpty()){
-            for(String[] list : games){
-                for (int i = 0; i < benutzer.size(); i++) {
-                    if(benutzer.get(i).getId()==Integer.parseInt(list[5])){
-                        spiele.add(new Game(list[1], list[2], list[3], list[4], /*benutzer.get(i)*/ Integer.toString(i),list[0]));
-                        break;
-                    }
-                }
-            }
-        }
+        users = DataHandler.getUsersFromTemp();
+        games = DataHandler.getGamesFromTemp();
 
         //Instanzen für GameManager und GameFilter initialisieren
         gamemanager = new GameManager();
         //Instanz für das LoginFenster initialisieren
-        login = new LoginHandler(users, benutzer);
+        login = new LoginHandler(users);
     }
     //Methode überprüft ob die eingegebenen Werte für das registrieren eines Users stimmen, wenn ja dann Anlegen. Ansonsten Fehlermeldung
     public static void RegisterUser() {
@@ -108,7 +85,6 @@ public class EventHandler {
         }
 
         //Existiert der User?
-        System.out.println("TEST");
         if (login.IsUserRegistered(username)) {
             //Ist das Passwort richtig?
             if (login.IsPasswordCorrect(username, passwort)) {
@@ -296,20 +272,12 @@ public class EventHandler {
             MainWindow.model.setRowCount(0);
             
             //Gehe jedes angelegte Spiel durch
-            for (String[] spiel : games) {
-                if (spiel[2].equals(Kategorie) &&   //Gehört es zu dieser kategorie?
-                    spiel[5].equals(UserID)         //Und zu diesem User?
+            for (Game game : games) {
+                if (game.getKategorie().equals(Kategorie) &&   //Gehört es zu dieser kategorie?
+                        game.getId().equals(UserID)         //Und zu diesem User?
                 ) {
                     //Ja, dann füg es zur Tabelle hinzu
-                    MainWindow.eintragHinzufuegen(spiel[0], spiel[1], Kategorie, spiel[3]);
-                }
-            }
-            for (Game spiel : spiele) {
-                if (spiel.getKategorie().equals(Kategorie) &&   //Gehört es zu dieser kategorie?
-                        spiel.getId().equals(UserID)         //Und zu diesem User?
-                ) {
-                    //Ja, dann füg es zur Tabelle hinzu
-                    MainWindow.eintragHinzufuegen(spiel.getId(), spiel.getName(), Kategorie, spiel.getGroesse());
+                    MainWindow.eintragHinzufuegen(game.getId(), game.getName(), Kategorie, game.getGroesse());
                 }
             }
 
@@ -375,7 +343,8 @@ public class EventHandler {
 
         //Benutzer klickt auf Ja und will speichern & schließen
         if (option == JOptionPane.YES_OPTION) {
-            DataHandler.SetDataToTemp(games, users);
+            DataHandler.SetGamesToTemp(games);
+            DataHandler.SetUserToTemp(users);
             return 0;
         }
         //Benutzer will einfach so schließen ohne zu speichern

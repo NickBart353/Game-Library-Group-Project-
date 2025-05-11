@@ -1,43 +1,24 @@
 public class User {
 
-    private String name;
-    private String pw;
-    private static int IDCOUNTER=0;
-    private int id;
+    private final String name;
+    private final String password;
+    private final String id;
 
-    public User(String name, String pw,int tempId){
-
+    public User(String name, String pw,String id){
         this.name = name;
-        this.pw = pw;
-        if(tempId==-1){
-            this.id=IDCOUNTER;
-        } else{
-            this.id = tempId;
-        }
-        IDCOUNTER++;
+        this.password = pw;
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getPassword() {
+        return password;
     }
 
-    public String getPw() {
-        return pw;
-    }
-
-    public void setPw(String pw) {
-        this.pw = pw;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

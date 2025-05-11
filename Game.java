@@ -1,7 +1,7 @@
 public class Game {
 
     private static Integer IDCOUNTER=0;
-    private String id;
+    private final String id;
     private String name;
     private String kategorie;
     private String exePath;

@@ -1,33 +1,22 @@
 import java.util.ArrayList;
 
 public class LoginHandler {
-    private ArrayList<String[]> users;
-    private ArrayList<User> benutzer;
+    private ArrayList<User> users;
 
     //Konstruktor für die Klasse LoginHandler
-    public LoginHandler(ArrayList<String[]> _users, ArrayList<User> _benutzer) {
+    public LoginHandler(ArrayList<User> _users) {
         users = _users;
-        benutzer = _benutzer;
     }
 
     //Methode zum überprüfen ob der User registriert ist
     public boolean IsUserRegistered(String username) {
+
         //Gehe jeden Benutzer durch
-        for (String[] benutzer : users) {            
-            //Hat ein Benutzer den Benutzernamen?
-            if (benutzer[1].equals(username)) {
-                //Ja? Dann darf er
+        for (User user : users){
+            if(user.getName().equals(username)){
                 return true;
             }
         }
-
-       // if(benutzer != null){
-            for (User user : benutzer){
-                if(user.getName().equals(username)){
-                    return true;
-                }
-            }
-       // }
 
         //Es gibt diesen User nicht
         return false;
@@ -35,11 +24,12 @@ public class LoginHandler {
 
     //Methode zum überprüfen ob Passwort korrekt ist
     public boolean IsPasswordCorrect(String username, String Passwort) {
+
         //Gehe jeden Benutzer durch
-        for (String[] benutzer : users) {
+        for (User user : users) {
             //Passt das Passwort zu dem Benutzer?
-            if (benutzer[1].equals(username) &&
-                benutzer[2].equals(Passwort)) {
+            if (user.getName().equals(username) &&
+                    user.getPassword().equals(Passwort)) {
                 //Ja? Dann darf er
                 return true;
             }
@@ -52,12 +42,12 @@ public class LoginHandler {
     //Methode um einen User einzuloggen
     public String LogUserIn(String username, String passwort) {
         //Gehe jeden Benutzer durch
-        for (String[] benutzer : users) {
+        for (User user : users) {
             //Hast du den User gefunden?
-            if (benutzer[1].equals(username) &&
-                benutzer[2].equals(passwort)) {
+            if (user.getName().equals(username) &&
+                    user.getPassword().equals(passwort)) {
                 //Ja? Dann gib ID zurück
-                return benutzer[0];
+                return user.getId();
             }
         }
 
@@ -68,11 +58,11 @@ public class LoginHandler {
     //Methode um den Username anhand der UserID rauszubekommen
     public String GetUsernameFromID(String ID) {
         //Gehe jeden Usr durch
-        for (String[] user : users) {
+        for (User user : users) {
             //Enthält er die UserID?
-            if (user[0].equals(ID)) {
+            if (user.getId().equals(ID)) {
                 //Gib Namen zurück
-                return user[1];
+                return user.getName();
             }
         }
 
@@ -82,13 +72,26 @@ public class LoginHandler {
 
     //Methode um einen neuen Benutzer beim registrieren in die .csv-Datei zu speichern
     public void AddUser(String username, String password) {
-        //Speichere dir die ID für den neunen User
-        String ID = GameManager.GetNewID(EventHandler.users);
 
         //Füge den User auch dem Array hinzu
-        EventHandler.users.add(new String[] {ID, username, password});
+        EventHandler.users.add(new User(username,password,GetNewID(EventHandler.users)));
 
         //Direkt in der .csv speichern
-        DataHandler.SetDataToTemp(EventHandler.games, users);
+        DataHandler.SetUserToTemp(EventHandler.users);
+    }
+
+    public static String GetNewID(ArrayList<User> users) {
+        //Überprüfe ob die ArrayList leer ist
+        if (!users.isEmpty()) {
+            //Wenn nicht, bestimme die ID der letzten Zeile in der 0. Spalte
+            String ID = users.getLast().getId();
+
+            //Wandel sie um und erhöhe um 1
+            Integer _ID = (Integer.parseInt(ID) + 1);
+            return _ID.toString();
+        } else {
+            //Is die Liste leer, dann vergib die erste ID
+            return "0";
+        }
     }
 }

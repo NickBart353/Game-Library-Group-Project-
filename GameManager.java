@@ -1,6 +1,5 @@
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
@@ -9,18 +8,18 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GameManager {
     //Methode sucht sich den letzten Eintrag aus dem Games-Array und rechnet auf die ID die es da gibt eins drauf und gibt das dann zurück
-    public static String GetNewID(ArrayList<String[]> games) {
+    public static String GetNewID(ArrayList<Game> games) {
         //Überprüfe ob die ArrayList leer ist
         if (!games.isEmpty()) { 
             //Wenn nicht, bestimme die ID der letzten Zeile in der 0. Spalte 
-            String ID = games.get(games.size() -1)[0];
+            String ID = games.getLast().getId();
 
             //Wandel sie um und erhöhe um 1
             Integer _ID = (Integer.parseInt(ID) + 1);
             return _ID.toString();
         } else {
             //Is die Liste leer, dann vergib die erste ID
-            return "1";
+            return "0";
         }
     }
 
@@ -98,7 +97,7 @@ public class GameManager {
         //Bestimmt das Spiel was gelöscht werden soll
         String gamename = MainWindow.tabelle.getValueAt(SelectedIndex, 1).toString();
 
-        //Frage den Benutzer ob er wirklich löschen will
+        //Frage den Benutzer, ob er wirklich löschen will
         int option;
         //Bestimme MSG-Box jhe nachg vorgang
         if (type.equals("zu löschen")) {
@@ -121,37 +120,37 @@ public class GameManager {
 
     //Methode um bei Auswahl einer Zeile in der Tabelle die Werte in die Textbox zu schreiben
     public static void PrintValuesInTextboxes() {
-        //Mache es nur wenn auch was augewählt wurde
+        //Mache es nur, wenn auch was augewählt wurde
         if (MainWindow.tabelle.getSelectedRow() != -1) {
-            //Merke dir die ID die ausgewählt wurde
+            //Merke dir die ID, die ausgewählt wurde
             String ID = MainWindow.tabelle.getValueAt(MainWindow.tabelle.getSelectedRow(), 0).toString();
 
             //Suche den DS der dieser ID zugehörig ist
-            String[] values = null;
-            for (String[] game : EventHandler.games) {
-                if (game.length > 0 && game[0].equals(ID)) {
-                    values = game;
+            Game value = null;
+            for (Game game : EventHandler.games) {
+                if (game != null && game.getId().equals(ID)) {
+                    value = game;
                     break;
                 }
             }
 
             //Printe die Werte nur, wenn du auch welche hast
-            if (values != null) {                
+            if (value != null) {
                 //Werte in die Textboxen
-                MainWindow.titelTextbox.setText(values[1]);
-                MainWindow.kategoriebox.setSelectedItem(values[2]);
-                MainWindow.speicherPlatzTextBox.setText(String.format(Locale.US, "%.3f", Double.parseDouble(values[3])));
-                MainWindow.pfadTextBox.setText(values[4]);
+                MainWindow.titelTextbox.setText(value.getName());
+                MainWindow.kategoriebox.setSelectedItem(value.getKategorie());
+                MainWindow.speicherPlatzTextBox.setText(value.getGroesse());
+                MainWindow.pfadTextBox.setText(value.getExePath());
                 
                 //Zeige als Tooltip den ausgewählten pfad an
-                MainWindow.pfadTextBox.setToolTipText(values[4]);
+                MainWindow.pfadTextBox.setToolTipText(value.getExePath());
             }
             
             //Buttons zum Hinzufügen weg, andere aktiv
             MainWindow.DisableButtons();
         }
         else {
-            //Alles unsichtbar, außer hinzufügen und neu
+            //Alles unsichtbar außer hinzufügen und neu
             MainWindow.EnableButtons();
         }
     }
@@ -162,9 +161,9 @@ public class GameManager {
         String ID = GetIDFromTable(); 
 
         //Lösche den DS auch aus dem Array
-        for (String[] element : EventHandler.games) {
+        for (Game element : EventHandler.games) {
             //Hat der aktuelle DS grade die ID?
-            if (element[0] == ID) {
+            if (element.getId().equals(ID)) {
                 //Dann lösche ihn raus und verlasse die Schleife
                 EventHandler.games.remove(element);
                 break;
@@ -174,10 +173,9 @@ public class GameManager {
 
     //Methode fügt das Spiel zum Array und zur Tabelle hinzu. ggf. auch die kategorie in die ComboBox
     public void AddGame() {
-        //Eintrag zum Array hizufügen
+        //Eintrag zum Array hinzufügen
 
-        EventHandler.games.add(new String[] {GetNewID(EventHandler.games), MainWindow.titelTextbox.getText(), MainWindow.kategoriebox.getSelectedItem().toString(), MainWindow.speicherPlatzTextBox.getText().replace(",","."), MainWindow.pfadTextBox.getText(), EventHandler.UserID});
-        EventHandler.spiele.add(new Game(MainWindow.titelTextbox.getText(), MainWindow.speicherPlatzTextBox.getText().replace(",","."), MainWindow.kategoriebox.getSelectedItem().toString(), MainWindow.pfadTextBox.getText(), EventHandler.UserID, "-1"));// GetNewID(EventHandler.games),  ,  , ));
+        EventHandler.games.add(new Game(MainWindow.titelTextbox.getText(), MainWindow.speicherPlatzTextBox.getText().replace(",","."), MainWindow.kategoriebox.getSelectedItem().toString(), MainWindow.pfadTextBox.getText(), EventHandler.UserID, GetNewID(EventHandler.games)));
         
         //Wenn die Kategorie noch nicht in der Combo ist, füg sie hinzu
         if (((DefaultComboBoxModel<String>) MainWindow.kategoriebox.getModel()).getIndexOf(MainWindow.kategoriebox.getSelectedItem().toString()) == -1) {
@@ -207,28 +205,16 @@ public class GameManager {
     public void ChangeGame() {
         //Bestimme die ID des ausgewählten Indexes in der Tabelle
         String ID = GetIDFromTable();
-        
-        //Finde den DS im Array
-        for (String[] spiel : EventHandler.games) {
+
+        for (Game game : EventHandler.games) {
             //Hat der DS die ID
-            if (spiel[0] == ID) {
+            if (game.getId().equals(ID)) {
                 //Ersetze die Werte im DS durch die neuen
-                spiel[1] = MainWindow.titelTextbox.getText();
-                spiel[2] = MainWindow.kategoriebox.getSelectedItem().toString();
-                spiel[3] = MainWindow.speicherPlatzTextBox.getText();
-                spiel[4] = MainWindow.pfadTextBox.getText();
-                spiel[5] = EventHandler.UserID;
-            }
-        }
-        for (Game spiel : EventHandler.spiele) {
-            //Hat der DS die ID
-            if (spiel.getId() == ID) {
-                //Ersetze die Werte im DS durch die neuen
-                spiel.setName(MainWindow.titelTextbox.getText());
-                spiel.setKategorie(MainWindow.kategoriebox.getSelectedItem().toString());
-                spiel.setGroesse(MainWindow.speicherPlatzTextBox.getText());
-                spiel.setExePath(MainWindow.pfadTextBox.getText());
-                spiel.setUser(EventHandler.UserID);
+                game.setName(MainWindow.titelTextbox.getText());
+                game.setKategorie(MainWindow.kategoriebox.getSelectedItem().toString());
+                game.setGroesse(MainWindow.speicherPlatzTextBox.getText());
+                game.setExePath(MainWindow.pfadTextBox.getText());
+                game.setUser(EventHandler.UserID);
             }
         }
         
@@ -244,64 +230,60 @@ public class GameManager {
     //Methode wird aufgerufen um eine Exe-Datei zu öffnen
     public void OpenExe() {
         //Bestimme die ID des ausgewählten Indexes in der Tabelle
-        String ID = GetIDFromTable(); 
+        String ID = GetIDFromTable();
 
         //Wenn die ID -1 ist dann muss er erst eins auswählen
-        if (ID == "-1") {
+        if (ID.equals("-1")) {
             JOptionPane.showMessageDialog(null, "Bitte ein Spiel auswählen um eine Exe-Datei dazu zu öffnen");
         }
 
-        //Suche nach dem DS mit der ID
-        for (String[] element : EventHandler.games) {
+        for (Game element : EventHandler.games) {
             //Hat der DS die gesuchte ID?
-            if (element[0] == ID) {
+            if (element.getId().equals(ID)) {
                 //Hat der DS überhaupt nen Exe-Pfad
-                if (element[4].length() >= 1) {                
-                    //Bilde dir den Command für Powershell damit du mit Admin-Rechten ausführen kannst wenn nötig
-                    String command = "powershell -Command \"Start-Process '" + element[4] + "' -Verb runAs\"";
+                if (!element.getExePath().isEmpty()) {
+                    //Bilde dir den Command für Powershell damit du mit Admin-Rechten ausführen kannst, wenn nötig
+                    String command = "powershell -Command \"Start-Process '" + element.getExePath() + "' -Verb runAs\"";
 
                     try {
                         //Starte dann die Exe erstmal ohne admin rechte
-                        Runtime.getRuntime().exec(element[4]);
-                    } 
-                    catch (Exception e) {
+                        Runtime.getRuntime().exec(element.getExePath());
+                    } catch (Exception e) {
                         try {
                             //Wenn du ohne nicht starten kannst, probiere es nochmal mit Admin-Rechten
-                            Runtime.getRuntime().exec(command);    
-                        } 
-                        catch (Exception ee) {
+                            Runtime.getRuntime().exec(command);
+                        } catch (Exception ee) {
                             //Wenn du weder mit, noch ohne admin rechten starten kannst gibts nen Error
                             JOptionPane.showMessageDialog(null, "Die Exe-Datei konnte nicht geöffnet werden. \nÜberprüfen sie den Pfad und versuchen es erneut!", "Fehler beim Öffnen der Exe-Datei", JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                }
-                else {
+                } else {
                     //Er hat keinen, dann frag ob er hinzufügen will
-                    int option = JOptionPane.showOptionDialog(null, "Sie haben für das Spiel '" + element[1] + "' keinen Pfad zu einer Exe-Datei hinzugefügt\n\nMöchten sie eine hinzufügen?", "", 
-                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+                    int option = JOptionPane.showOptionDialog(null, "Sie haben für das Spiel '" + element.getName() + "' keinen Pfad zu einer Exe-Datei hinzugefügt\n\nMöchten sie eine hinzufügen?", "",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
                     //Will er?
                     if (option == JOptionPane.YES_OPTION) {
                         //Speichere den Exe-Pfad im DS
-                        element[4] = SelectExefile();
+                        element.setExePath(SelectExefile());
 
                         try {
                             //Versuche ihn zu öffnen
-                            Runtime.getRuntime().exec(element[4]);
+                            Runtime.getRuntime().exec(element.getExePath());
 
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(null, "Die Exe-Datei konnte zwar hinzugefügt aber nicht geöffnet werden. \nÜberprüfen sie den Pfad und versuchen es erneut!\n\n" + e.getMessage());
                         }
-                    }
-                    else {
+                    } else {
                         //Falls nicht, dann mach halt nichts
                         return;
                     }
                 }
             }
+
+
         }
     }
-
     //Methode öffnet einen FileDialog und gibt den Pfad zur Exe zurück
     public String SelectExefile() {
         String path = "";
@@ -321,7 +303,7 @@ public class GameManager {
             return filechooser.getSelectedFile().getAbsolutePath();
         }
 
-        //Hat nichts ausgewählt dann bekommt er direkt nen leeren String einfach
+        //Hat nichts ausgewählt, dann bekommt er direkt nen leeren String einfach
         return path;
     }
 
