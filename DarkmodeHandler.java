@@ -68,6 +68,15 @@ public class DarkmodeHandler {
     
         MainWindow.toggleSwitch.setSelected(true);
         MainWindow.toggleSwitch.setText("🌞");
+
+        MainWindow.tabelle.setForeground(Color.WHITE);
+        MainWindow.tabelle.setBackground(darkBackground);
+        MainWindow.tabelle.setGridColor(darkBackground);
+
+        MainWindow.kategorienList.setBackground(darkBackground);
+        MainWindow.kategorienList.setForeground(Color.WHITE);
+
+
     }
 
     public static void setMainLightmode() {
