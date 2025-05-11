@@ -258,15 +258,15 @@ public class Main {
 
         for (Game game : EventHandler.games) {
             // Gehört das Spiel zum angemeldeten User?
-            if (game.getId().equals(EventHandler.UserID)) {
+            if (game.getUser().equals(EventHandler.UserID)) {
                 // Füge das Spiel zur Tabelle hinzu
                 MainWindow.eintragHinzufuegen(game.getId(), game.getName(), game.getKategorie(), game.getGroesse());
-
                 // Hat die Kategorie einen Namen, der noch nicht in den Comboboxen ist?
                 if (((DefaultComboBoxModel<String>) MainWindow.kategoriebox.getModel()).getIndexOf(game.getKategorie()) == -1) {
                     // Füge die gerade aktuelle Kategorie in die Comboboxen ein
                     MainWindow.kategoriebox.addItem(game.getKategorie());
                     MainWindow.kategorieFilterBox.addItem(game.getKategorie());
+
                 }
             }
         }

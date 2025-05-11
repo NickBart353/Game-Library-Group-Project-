@@ -320,9 +320,9 @@ public class MainWindow {
     // Fügt einen neuen Eintrag in die Tabelle hinzu
     public static void eintragHinzufuegen(String ID, String name, String kategorie, String speicher) {
         //Wandel den Speicherpatz in einen Double um das du auch nach ihm sortieren kann
-        Double DBL_speicher = Double.parseDouble(speicher);
+        //Double DBL_speicher = Double.parseDouble(speicher);
         
-        model.addRow(new Object[]{ID, name, kategorie, DBL_speicher});
+        model.addRow(new Object[]{ID, name, kategorie, speicher});
     }
 
     //Methode macht Button Hinzufügen und HinzufügenPfad nicht mehr anklickbar und macht die anderen nutzbar
