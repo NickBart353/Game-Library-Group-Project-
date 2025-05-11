@@ -120,7 +120,7 @@ public class DataHandler {
                     //Müssen mindestens 5 Teile sein, sonst Indexfehler bei leerer Zeile
                     if (lineparts.length >= 5) {
                         // Füge für jede Zeile einen Eintrag in die ArrayList hinzu
-                        gameData.add(new Game(lineparts[1], lineparts[2], lineparts[3], lineparts[4], lineparts[5],lineparts[0]));
+                        gameData.add(new Game(lineparts[1], lineparts[3], lineparts[2], lineparts[4], lineparts[5],lineparts[0]));
                     }
                 }
 
