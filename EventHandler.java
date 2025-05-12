@@ -345,6 +345,7 @@ public class EventHandler {
         if (option == JOptionPane.YES_OPTION) {
             DataHandler.SetGamesToTemp(games);
             DataHandler.SetUserToTemp(users);
+            DataHandler.getModeFromTemp(Main.isDarkmode);
             return 0;
         }
         //Benutzer will einfach so schließen ohne zu speichern

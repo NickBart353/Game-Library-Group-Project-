@@ -14,7 +14,7 @@ public class Main {
     private static EventHandler logik;
     
     // Merken, ob Darkmode an/aus ist
-    public static boolean isDarkmode = true;
+    public static boolean isDarkmode = DataHandler.getModeFromTemp();
 
     public static void main(String[] args) {
         // Initialisiere Instanz

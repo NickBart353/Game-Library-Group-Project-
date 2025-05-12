@@ -1,14 +1,13 @@
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.table.JTableHeader;
 
 public class DarkmodeHandler {
     
-    private static Color lightBackground = new Color(238, 238, 238);
-    private static Color darkBackground = new Color( 31, 31, 31);
-    private static Color darkText = new Color(220, 220, 220);
-    private static Color lightText = Color.BLACK;
-
-
+    private static final Color lightBackground = new Color(238, 238, 238);
+    private static final Color darkBackground = new Color( 31, 31, 31);
+    private static final Color darkText = new Color(220, 220, 220);
+    private static final Color lightText = Color.BLACK;
 
     public static void setMainDarkmode() {
 
@@ -69,14 +68,17 @@ public class DarkmodeHandler {
         MainWindow.toggleSwitch.setSelected(true);
         MainWindow.toggleSwitch.setText("🌞");
 
-        MainWindow.tabelle.setForeground(Color.WHITE);
+        MainWindow.tabelle.setForeground(darkText);
         MainWindow.tabelle.setBackground(darkBackground);
-        MainWindow.tabelle.setGridColor(darkBackground);
+        MainWindow.tabelle.setGridColor(lightBackground);
+        MainWindow.scrollPane.getViewport().setBackground(darkBackground);
 
+        JTableHeader header = MainWindow.tabelle.getTableHeader();
+        header.setBackground(darkBackground);
+        header.setForeground(darkText);
+
+        MainWindow.kategorienList.setForeground(darkText);
         MainWindow.kategorienList.setBackground(darkBackground);
-        MainWindow.kategorienList.setForeground(Color.WHITE);
-
-
     }
 
     public static void setMainLightmode() {
@@ -137,6 +139,18 @@ public class DarkmodeHandler {
         
         MainWindow.toggleSwitch.setSelected(false);
         MainWindow.toggleSwitch.setText("🌙");
+
+        MainWindow.tabelle.setForeground(lightText);
+        MainWindow.tabelle.setBackground(lightBackground);
+        MainWindow.tabelle.setGridColor(darkBackground);
+        MainWindow.scrollPane.getViewport().setBackground(lightBackground);
+
+        JTableHeader header = MainWindow.tabelle.getTableHeader();
+        header.setBackground(lightBackground);
+        header.setForeground(lightText);
+
+        MainWindow.kategorienList.setForeground(lightText);
+        MainWindow.kategorienList.setBackground(lightBackground);
     }
     
     public static void setLoginDarkmode() {

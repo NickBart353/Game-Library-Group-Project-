@@ -20,6 +20,7 @@ public class MainWindow {
     public static ButtonCustom btn_Refresh = new ButtonCustom();
     public static JButton btn_Logout = new JButton();
     public static JTable tabelle;
+    public static JScrollPane scrollPane;
     public static JComboBox<String> kategoriebox;
     public static JComboBox<String> kategorieFilterBox;
     public static JTextField pfadTextBox;
@@ -260,9 +261,10 @@ public class MainWindow {
         columnModel.getColumn(0).setMaxWidth(0);
         columnModel.getColumn(0).setPreferredWidth(0);
 
-        JScrollPane scrollPane = new JScrollPane(tabelle);
+        scrollPane = new JScrollPane(tabelle);
         scrollPane.setBounds(330, 420, 500, 250);  
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        //scrollPane.getViewport().setBackground(Color.DARK_GRAY);
         frame.add(scrollPane);
     }
 

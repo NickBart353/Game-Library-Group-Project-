@@ -9,8 +9,9 @@ public class DataHandler {
 
     //String zum Tempordner
     private static final String tempDir = System.getProperty("java.io.tmpdir");
-    private static final String gameName = "Games.csv";
-    private static final String userName = "Users.csv";
+    private static final String gameFile = "Games.csv";
+    private static final String userFile = "Users.csv";
+    private static final String modeFile = "Mode.csv";
 
     //Methode um sich die Daten für Games und User aus dem Temp-Ordner in eine ArrayList innerhalb des Programms zu kopieren
     public static ArrayList<User> getUsersFromTemp()
@@ -20,7 +21,7 @@ public class DataHandler {
             ArrayList<User> userData = new ArrayList<>();
 
             //Bestimme den Pfad zum Temp Ordner, und zur Daten.csv Datei
-            File file = new File(tempDir, "Speicherplatzrechner\\" + userName);
+            File file = new File(tempDir, "Speicherplatzrechner\\" + userFile);
             File directory = new File(tempDir, "Speicherplatzrechner");
 
             //Überprüfe ob der Ordner existier in dem die Dateien liegen sollen
@@ -75,7 +76,7 @@ public class DataHandler {
             }
         } catch (Exception e) {
             //Gib Fehlermeldung aus
-            JOptionPane.showMessageDialog(null, e.getMessage(), userName, 0);
+            JOptionPane.showMessageDialog(null, e.getMessage(), userFile, 0);
         
             //Leeres Array zurückgeben
             return new ArrayList<>();
@@ -89,7 +90,7 @@ public class DataHandler {
             ArrayList<Game> gameData = new ArrayList<>();
 
             //Bestimme den Pfad zum Temp Ordner, und zur Daten.csv Datei
-            File file = new File(tempDir, "Speicherplatzrechner\\" + gameName);
+            File file = new File(tempDir, "Speicherplatzrechner\\" + gameFile);
             File directory = new File(tempDir, "Speicherplatzrechner");
 
             //Überprüfe ob der Ordner existier in dem die Dateien liegen sollen
@@ -139,16 +140,77 @@ public class DataHandler {
             }
         } catch (Exception e) {
             //Gib Fehlermeldung aus
-            JOptionPane.showMessageDialog(null, e.getMessage(), gameName, 0);
+            JOptionPane.showMessageDialog(null, e.getMessage(), gameFile, 0);
 
             //Leeres Array zurückgeben
             return new ArrayList<>();
         }
     }
 
+    public static boolean getModeFromTemp()
+    {
+        try {
+            //Array in dem die Spiele gespeichert werden
+            boolean mode = false;
+
+            //Bestimme den Pfad zum Temp Ordner, und zur Daten.csv Datei
+            File file = new File(tempDir, "Speicherplatzrechner\\" + modeFile);
+            File directory = new File(tempDir, "Speicherplatzrechner");
+
+            //Überprüfe ob der Ordner existier in dem die Dateien liegen sollen
+            if (!directory.exists()) {
+                //Falls nicht dann erstelle ihn
+                directory.mkdirs();
+
+                //Kannst auch gleich nen leeres Array returnen, da es die Daten 100%ig auch nich gibt
+                return false;
+            }
+
+            //Überprüfe ob die Datei in Temp existiert
+            if (file.exists()) {
+                //Erstelle einen Scanner der Zeilenweiße die Datei ließt
+                Scanner sc = new Scanner(file);
+
+                //Solange er noch lesen kann...
+                while (sc.hasNextLine()) {
+                    //...Lese eine Zeile und Splitte sie direkt anhand des Semikolons
+                    String[] lineparts = sc.nextLine().split(";");
+
+                    //Müssen mindestens 3 Teile sein, sonst Indexfehler bei leerer Zeile
+                    if (lineparts.length == 1) {
+                        // Füge auch für jede Zeile einen Eintrag hinzu, nur weniger Spalten
+                        return Boolean.parseBoolean(lineparts[0]);
+                    }
+                }
+
+                //Scanner beenden
+                sc.close();
+
+                //Wenn er alle Daten ausgelesen hat, gib das Array zurück
+                return mode;
+            }
+            else {
+                //Wenn es sie nicht gibt, dann erstelle die Datei
+                file.createNewFile();
+
+                //Erzeuge einen Writer um in die Datei der User zu schreiben
+                FileWriter userWriter = new FileWriter(file);
+
+                return mode;
+            }
+        } catch (Exception e) {
+            //Gib Fehlermeldung aus
+            JOptionPane.showMessageDialog(null, e.getMessage(), userFile, 0);
+
+            //Leeres Array zurückgeben
+            return false;
+        }
+    }
+
+
     public static void SetUserToTemp(ArrayList<User> benutzer) {
         //Erstelle die File Objekte für Games und Users
-        File fileUsers = new File(tempDir, "Speicherplatzrechner\\" + "Users.csv");
+        File fileUsers = new File(tempDir, "Speicherplatzrechner\\" + userFile);
 
         try {
             //Erzeuge einen Writer um in die Datei der USer zu schreiben
@@ -177,7 +239,7 @@ public class DataHandler {
 
     public static void SetGamesToTemp(ArrayList<Game> games) {
         //Erstelle die File Objekte für Games und Users
-        File fileGames = new File(tempDir, "Speicherplatzrechner\\" + "Games.csv");
+        File fileGames = new File(tempDir, "Speicherplatzrechner\\" + gameFile);
 
         try {
             //Erzeuge einen Writer um in die Datei der Games zu schreiben
@@ -199,5 +261,32 @@ public class DataHandler {
                     "Achtung", JOptionPane.OK_OPTION,  JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    public static void SetModeToTemp(boolean mode) {
+        //Erstelle die File Objekte für Games und Users
+        File fileMode = new File(tempDir, "Speicherplatzrechner\\" + modeFile);
+
+        try {
+            //Erzeuge einen Writer um in die Datei der USer zu schreiben
+            FileWriter userWriter = new FileWriter(fileMode);
+
+            //Bilde den String für eine Zeile
+            String line = String.valueOf(mode);
+
+            userWriter.write(line);
+
+            //Wenn das Array zu Ende ist, dann zerstöre den Writer
+            userWriter.close();
+        } catch (Exception e) {
+            //Gib Meldung aus das Daten für User nicht gespeichert werden konnten
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Daten für den Darkmode konnten nicht gespeichert werden. \nBitte versuche es erneut\n\n\n" + e.getMessage(),
+                    "Achtung",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
 
 }
