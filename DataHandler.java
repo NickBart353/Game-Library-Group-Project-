@@ -28,6 +28,7 @@ public class DataHandler {
             if (!directory.exists()) {
                 //Falls nicht dann erstelle ihn
                 directory.mkdirs();
+                file.createNewFile();
 
                 //Kannst auch gleich nen leeres Array returnen, da es die Daten 100%ig auch nich gibt
                 return new ArrayList<>();
@@ -97,11 +98,7 @@ public class DataHandler {
             if (!directory.exists()) {
                 //Falls nicht dann erstelle ihn
                 directory.mkdirs();
-
-/*                if (gameName.equals("Games.csv")) {
-                    //Dann gib ein Array zurück was schon einige Werte hat
-                    return Main.PrintTestDaten();
-                }*/
+                file.createNewFile();
 
                 //Kannst auch gleich nen leeres Array returnen, da es die Daten 100%ig auch nich gibt
                 return new ArrayList<>();
@@ -161,6 +158,7 @@ public class DataHandler {
             if (!directory.exists()) {
                 //Falls nicht dann erstelle ihn
                 directory.mkdirs();
+                file.createNewFile();
 
                 //Kannst auch gleich nen leeres Array returnen, da es die Daten 100%ig auch nich gibt
                 return false;
